@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Administração – NOVA Medical Recrutamento</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f3f4f6; min-height: 100vh; color: #111827; }
+    .topbar { background: linear-gradient(135deg, #1a2332, #2d4a6e); color: #fff; padding: 0 24px; height: 60px; display: flex; align-items: center; justify-content: space-between; }
+    .topbar-brand { display: flex; align-items: center; gap: 12px; }
+    .topbar-brand .icon { width: 36px; height: 36px; background: rgba(255,255,255,.15); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 700; }
+    .topbar-brand h1 { font-size: 16px; font-weight: 700; }
+    .topbar-brand span { font-size: 12px; opacity: .7; }
+    .topbar-actions { display: flex; align-items: center; gap: 16px; }
+    .user-badge { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+    .avatar { width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,.25); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; }
+    .btn-back, .btn-logout { padding: 6px 14px; border-radius: 6px; border: none; font-size: 13px; cursor: pointer; font-weight: 600; }
+    .btn-back { background: rgba(255,255,255,.15); color: #fff; text-decoration: none; display: inline-flex; align-items: center; }
+    .btn-back:hover { background: rgba(255,255,255,.25); }
+    .btn-logout { background: rgba(220,38,38,.3); color: #fff; }
+    .btn-logout:hover { background: rgba(220,38,38,.5); }
+    .main { max-width: 900px; margin: 32px auto; padding: 0 24px; }
+    .page-title { font-size: 22px; font-weight: 700; color: #1a2332; margin-bottom: 24px; }
+    .card { background: #fff; border-radius: 12px; box-shadow: 0 1px 4px rgba(0,0,0,.1); padding: 28px; margin-bottom: 28px; }
+    .card h2 { font-size: 16px; font-weight: 700; color: #1a2332; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid #e5e7eb; }
+    .form-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; }
+    .form-group { flex: 1; min-width: 180px; }
+    .form-group label { display: block; font-size: 12px; font-weight: 600; color: #374151; margin-bottom: 5px; }
+    .form-group input, .form-group select { width: 100%; padding: 9px 12px; border: 1.5px solid #d1d5db; border-radius: 7px; font-size: 14px; color: #111827; outline: none; transition: border-color .2s; }
+    .form-group input:focus, .form-group select:focus { border-color: #2d6a9f; }
+    .btn-create { padding: 10px 24px; background: linear-gradient(135deg,#1a3a5c,#2d6a9f); color: #fff; border: none; border-radius: 7px; font-size: 14px; font-weight: 600; cursor: pointer; }
+    .btn-create:hover { opacity: .9; }
+    .btn-create:disabled { opacity: .5; cursor: not-allowed; }
+    .msg { display: none; padding: 10px 14px; border-radius: 7px; font-size: 13px; margin-bottom: 14px; }
+    .msg.success { display: block; background: #f0fdf4; border: 1px solid #bbf7d0; color: #15803d; }
+    .msg.error { display: block; background: #fef2f2; border: 1px solid #fecaca; color: #dc2626; }
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    thead th { background: #f9fafb; padding: 10px 14px; text-align: left; font-size: 12px; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: .5px; border-bottom: 1px solid #e5e7eb; }
+    tbody td { padding: 12px 14px; border-bottom: 1px solid #f3f4f6; vertical-align: middle; }
+    tbody tr:hover td { background: #f9fafb; }
+    tbody tr:last-child td { border-bottom: none; }
+    .badge { display: inline-block; padding: 2px 10px; border-radius: 99px; font-size: 11px; font-weight: 700; }
+    .badge-admin { background: #eff6ff; color: #1d4ed8; }
+    .badge-user { background: #f3f4f6; color: #4b5563; }
+    .btn-remove { padding: 5px 12px; background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; }
+    .btn-remove:hover { background: #fee2e2; }
+    .empty-state { text-align: center; color: #9ca3af; padding: 32px; font-size: 14px; }
+  </style>
+</head>
+<body>
+<div class="topbar">
+  <div class="topbar-brand">
+    <div class="icon">N</div>
+    <div><h1>NOVA Medical – Recrutamento</h1><span>Painel de Administração</span></div>
+  </div>
+  <div class="topbar-actions">
+    <div class="user-badge">
+      <div class="avatar" id="avatarEl">–</div>
+      <span id="usernameEl"></span>
+    </div>
+    <a href="index.html" class="btn-back">← Dashboard</a>
+    <button class="btn-logout" onclick="Auth.logout()">Sair</button>
+  </div>
+</div>
+<div class="main">
+  <p class="page-title">Gestão de Utilizadores</p>
+  <div class="card">
+    <h2>Criar Novo Utilizador</h2>
+    <div id="createMsg" class="msg"></div>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="newUsername">Utilizador</label>
+        <input type="text" id="newUsername" placeholder="nome de utilizador" autocomplete="off">
+      </div>
+      <div class="form-group">
+        <label for="newPassword">Senha</label>
+        <input type="password" id="newPassword" placeholder="senha segura" autocomplete="new-password">
+      </div>
+      <div class="form-group" style="max-width:140px;">
+        <label for="newRole">Papel</label>
+        <select id="newRole">
+          <option value="user">user</option>
+          <option value="admin">admin</option>
+        </select>
+      </div>
+    </div>
+    <button class="btn-create" id="btnCreate" onclick="createUser()">Criar Utilizador</button>
+  </div>
+  <div class="card">
+    <h2>Utilizadores Existentes</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Utilizador</th><th>Papel</th><th>Criado em</th><th>Acções</th></tr>
+        </thead>
+        <tbody id="usersTableBody">
+          <tr><td colspan="4" class="empty-state">A carregar...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<script src="auth-simple.js"></script>
+<script>
+  Auth.initDefaultAdmin().then(function () {
+    if (!Auth.requireAdmin()) return;
+    const session = Auth.getSession();
+    document.getElementById('avatarEl').textContent = session.username.slice(0, 2).toUpperCase();
+    document.getElementById('usernameEl').textContent = session.username;
+    renderUsers();
+  });
+  function renderUsers() {
+    const tbody = document.getElementById('usersTableBody');
+    try {
+      const users = Auth.listUsers();
+      if (users.length === 0) { tbody.innerHTML = '<tr><td colspan="4" class="empty-state">Nenhum utilizador encontrado.</td></tr>'; return; }
+      tbody.innerHTML = users.map(function(u) {
+        const date = new Date(u.created_at).toLocaleDateString('pt-PT', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        const badgeClass = u.role === 'admin' ? 'badge-admin' : 'badge-user';
+        const session = Auth.getSession();
+        const isSelf = session && session.username === u.username;
+        const removeBtn = isSelf ? '<span style="font-size:12px;color:#9ca3af;">(sessão activa)</span>'
+          : '<button class="btn-remove" onclick="removeUser(\'' + u.username + '\')">Remover</button>';
+        return '<tr><td><strong>' + u.username + '</strong></td><td><span class="badge ' + badgeClass + '">' + u.role + '</span></td><td>' + date + '</td><td>' + removeBtn + '</td></tr>';
+      }).join('');
+    } catch(e) { tbody.innerHTML = '<tr><td colspan="4" class="empty-state">Erro ao carregar utilizadores.</td></tr>'; }
+  }
+  async function createUser() {
+    const msgEl = document.getElementById('createMsg');
+    const btn = document.getElementById('btnCreate');
+    const username = document.getElementById('newUsername').value.trim();
+    const password = document.getElementById('newPassword').value;
+    const role = document.getElementById('newRole').value;
+    msgEl.className = 'msg';
+    if (!username || !password) { msgEl.className = 'msg error'; msgEl.textContent = 'Preencha todos os campos.'; return; }
+    if (password.length < 6) { msgEl.className = 'msg error'; msgEl.textContent = 'A senha deve ter pelo menos 6 caracteres.'; return; }
+    btn.disabled = true;
+    try {
+      await Auth.createUser(username, password, role);
+      msgEl.className = 'msg success';
+      msgEl.textContent = 'Utilizador "' + username + '" criado com sucesso.';
+      document.getElementById('newUsername').value = '';
+      document.getElementById('newPassword').value = '';
+      document.getElementById('newRole').value = 'user';
+      renderUsers();
+    } catch(e) { msgEl.className = 'msg error'; msgEl.textContent = e.message || 'Erro ao criar utilizador.'; }
+    btn.disabled = false;
+  }
+  function removeUser(username) {
+    if (!confirm('Remover o utilizador "' + username + '"? Esta acção não pode ser desfeita.')) return;
+    try { Auth.removeUser(username); renderUsers(); } catch(e) { alert(e.message || 'Erro ao remover utilizador.'); }
+  }
+</script>
+</body>
+</html>
