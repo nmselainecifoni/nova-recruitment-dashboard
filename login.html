@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login – NOVA Medical Recrutamento</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: linear-gradient(135deg, #1a2332 0%, #2d4a6e 50%, #1a3a5c 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .login-container {
+      background: #fff;
+      border-radius: 16px;
+      padding: 48px 40px 40px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+    }
+
+    .logo {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .logo-icon {
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, #1a3a5c, #2d6a9f);
+      border-radius: 16px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+
+    .logo-icon svg { width: 36px; height: 36px; fill: #fff; }
+
+    .logo h1 {
+      font-size: 20px;
+      font-weight: 700;
+      color: #1a2332;
+      line-height: 1.3;
+    }
+
+    .logo p {
+      font-size: 13px;
+      color: #6b7280;
+      margin-top: 4px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 6px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1.5px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 15px;
+      color: #111827;
+      transition: border-color .2s, box-shadow .2s;
+      outline: none;
+    }
+
+    .form-group input:focus {
+      border-color: #2d6a9f;
+      box-shadow: 0 0 0 3px rgba(45,106,159,.15);
+    }
+
+    .btn-login {
+      width: 100%;
+      padding: 13px;
+      background: linear-gradient(135deg, #1a3a5c, #2d6a9f);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity .2s, transform .1s;
+      margin-top: 8px;
+    }
+
+    .btn-login:hover { opacity: .92; }
+    .btn-login:active { transform: scale(.98); }
+    .btn-login:disabled { opacity: .6; cursor: not-allowed; }
+
+    .error-msg {
+      display: none;
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #dc2626;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 13px;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+
+    .error-msg.visible { display: block; }
+
+    .footer-note {
+      text-align: center;
+      font-size: 12px;
+      color: #9ca3af;
+      margin-top: 28px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="login-container">
+  <div class="logo">
+    <div class="logo-icon">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/>
+      </svg>
+    </div>
+    <h1>NOVA Medical</h1>
+    <p>Gestão de Recrutamento</p>
+  </div>
+
+  <div class="error-msg" id="errorMsg">Utilizador ou senha incorretos.</div>
+
+  <form id="loginForm" novalidate>
+    <div class="form-group">
+      <label for="username">Utilizador</label>
+      <input type="text" id="username" name="username" autocomplete="username"
+             placeholder="nome de utilizador" required autofocus>
+    </div>
+    <div class="form-group">
+      <label for="password">Senha</label>
+      <input type="password" id="password" name="password" autocomplete="current-password"
+             placeholder="••••••••" required>
+    </div>
+    <button type="submit" class="btn-login" id="btnLogin">Entrar</button>
+  </form>
+
+  <p class="footer-note">Acesso restrito a utilizadores autorizados.</p>
+</div>
+
+<script src="auth-simple.js"></script>
+<script>
+  (async function () {
+    // Se já tem sessão, redirecionar para o dashboard
+    await Auth.initDefaultAdmin();
+    if (Auth.isLoggedIn()) {
+      window.location.href = 'index.html';
+      return;
+    }
+
+    const form    = document.getElementById('loginForm');
+    const btnLogin = document.getElementById('btnLogin');
+    const errorMsg = document.getElementById('errorMsg');
+
+    form.addEventListener('submit', async function (e) {
+      e.preventDefault();
+      errorMsg.classList.remove('visible');
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value;
+
+      if (!username || !password) {
+        errorMsg.textContent = 'Preencha todos os campos.';
+        errorMsg.classList.add('visible');
+        return;
+      }
+
+      btnLogin.disabled = true;
+      btnLogin.textContent = 'A entrar...';
+
+      const ok = await Auth.login(username, password);
+      if (ok) {
+        window.location.href = 'index.html';
+      } else {
+        errorMsg.textContent = 'Utilizador ou senha incorretos.';
+        errorMsg.classList.add('visible');
+        btnLogin.disabled = false;
+        btnLogin.textContent = 'Entrar';
+        document.getElementById('password').value = '';
+        document.getElementById('password').focus();
+      }
+    });
+  })();
+</script>
+</body>
+</html>
