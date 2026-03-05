@@ -1,30 +1,34 @@
 {
-  "routes": [
-    {
-      "route": "/login.html",
-      "allowedRoles": ["anonymous"]
-    },
-    {
-      "route": "/auth-simple.js",
-      "allowedRoles": ["anonymous"]
-    },
-    {
-      "route": "/admin.html",
-      "allowedRoles": ["anonymous"]
-    },
-    {
-      "route": "/*",
-      "allowedRoles": ["anonymous"]
-    }
-  ],
-  "navigationFallback": {
-    "rewrite": "/index.html",
-    "exclude": ["/*.{css,js,png,jpg,svg,ico,json}"]
-  },
-  "globalHeaders": {
-    "X-Content-Type-Options": "nosniff",
-    "X-Frame-Options": "DENY",
-    "Referrer-Policy": "strict-origin-when-cross-origin",
-    "Permissions-Policy": "geolocation=()"
-  }
+      "routes": [
+              {
+                        "route": "/login.html",
+                        "allowedRoles": ["anonymous"]
+              },
+              {
+                        "route": "/auth-simple.js",
+                        "allowedRoles": ["anonymous"]
+              },
+              {
+                        "route": "/admin.html",
+                        "allowedRoles": ["anonymous"]
+              },
+              {
+                        "route": "/*",
+                        "allowedRoles": ["anonymous"]
+              }
+      ],
+      "navigationFallback": {
+              "rewrite": "/index.html",
+              "exclude": ["/*.{css,js,png,jpg,svg,ico,json}"]
+      },
+      "mimeTypes": {
+              ".html": "text/html; charset=utf-8",
+              ".js": "application/javascript; charset=utf-8"
+      },
+      "globalHeaders": {
+              "X-Content-Type-Options": "nosniff",
+              "X-Frame-Options": "DENY",
+              "Referrer-Policy": "strict-origin-when-cross-origin",
+              "Permissions-Policy": "geolocation=()"
+      }
 }
