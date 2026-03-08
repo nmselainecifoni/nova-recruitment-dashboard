@@ -278,10 +278,7 @@ label{display:block;font-size:10px;font-weight:900;text-transform:uppercase;lett
     </div>
     <!-- CENTER: titles â full stretch -->
     <!-- CENTER: titles — full stretch -->
-    <div style="flex:1;text-align:center;padding:0 24px">
-      <div style="font-size:20px;font-weight:900;color:#1a2340;letter-spacing:-.3px;line-height:1.15">Dashboard de Gestão de Processos</div>
-      <div style="font-size:11px;font-weight:500;color:#868e96;margin-top:2px;letter-spacing:.2px">Recrutamento em Investigação Â· Serviço Jurídico</div>
-      <div style="font-size:20px;font-weight:900;color:#1a2340;letter-spacing:-.3px;line-height:1.15">Dashboard de Gestão de Processos</div>
+    <div style="flex:1;text-align:center;padding:0 24px"> <div style="font-size:20px;font-weight:900;color:#1a2340;letter-spacing:-.3px;line-height:1.15">Dashboard de Gestão de Processos</div>
       <div style="font-size:11px;font-weight:500;color:#868e96;margin-top:2px;letter-spacing:.2px">Recrutamento em Investigação · Serviço Jurídico</div>
     </div>
     <!-- RIGHT: actions -->
@@ -295,11 +292,6 @@ label{display:block;font-size:10px;font-weight:900;text-transform:uppercase;lett
 </header>
 
 <div class="tab-bar">
-  <div class="tab act" data-tab="dash" onclick="goTab('dash')">ð  Dashboard</div>
-  <div class="tab" data-tab="rec" onclick="goTab('rec')">ð Recrutamentos</div>
-  <div class="tab" data-tab="cont" onclick="goTab('cont')">ð Contratos</div>
-  <div class="tab" data-tab="rel" onclick="goTab('rel')">ð Relatórios</div>
-  <div class="tab" data-tab="aj" onclick="goTab('aj')">âï¸ Ajustes</div>
   <div class="tab act" data-tab="dash" onclick="goTab('dash')">🏠 Dashboard</div>
   <div class="tab" data-tab="rec" onclick="goTab('rec')">📋 Recrutamentos</div>
   <div class="tab" data-tab="cont" onclick="goTab('cont')">📝 Contratos</div>
@@ -312,11 +304,6 @@ label{display:block;font-size:10px;font-weight:900;text-transform:uppercase;lett
 <div class="page act" id="page-dash">
 
   <div class="kpi-row">
-    <div class="kpi"><div class="kpi-ico">ð</div><div class="kpi-val" id="kpi-abertos" style="color:var(--blue)">0</div><div class="kpi-lbl">Recrutamentos Abertos</div></div>
-    <div class="kpi"><div class="kpi-ico">ð</div><div class="kpi-val" id="kpi-contratos" style="color:var(--orange)">0</div><div class="kpi-lbl">Contratos Pendentes</div></div>
-    <div class="kpi"><div class="kpi-ico">âï¸</div><div class="kpi-val" id="kpi-ap" style="color:var(--purple)">0</div><div class="kpi-lbl">APs Activas</div></div>
-    <div class="kpi"><div class="kpi-ico">ð¬</div><div class="kpi-val" id="kpi-cand" style="color:var(--teal)">0</div><div class="kpi-lbl">Candidaturas Abertas</div></div>
-    <div class="kpi"><div class="kpi-ico">â</div><div class="kpi-val" id="kpi-concluidos" style="color:var(--green)">0</div><div class="kpi-lbl">Concluídos este Ano</div></div>
     <div class="kpi"><div class="kpi-ico">📋</div><div class="kpi-val" id="kpi-abertos" style="color:var(--blue)">0</div><div class="kpi-lbl">Recrutamentos Abertos</div></div>
     <div class="kpi"><div class="kpi-ico">📝</div><div class="kpi-val" id="kpi-contratos" style="color:var(--orange)">0</div><div class="kpi-lbl">Contratos Pendentes</div></div>
     <div class="kpi"><div class="kpi-ico">⚖️</div><div class="kpi-val" id="kpi-ap" style="color:var(--purple)">0</div><div class="kpi-lbl">APs Activas</div></div>
@@ -421,10 +408,6 @@ label{display:block;font-size:10px;font-weight:900;text-transform:uppercase;lett
   </div>
 
   <div class="kpi-row" style="grid-template-columns:repeat(4,1fr)">
-    <div class="kpi"><div class="kpi-ico">â³</div><div class="kpi-val" id="c-pend" style="color:var(--orange)">0</div><div class="kpi-lbl">Pedidos Pendentes</div></div>
-    <div class="kpi"><div class="kpi-ico">ð´</div><div class="kpi-val" id="c-late" style="color:var(--red)">0</div><div class="kpi-lbl">Em Atraso</div></div>
-    <div class="kpi"><div class="kpi-ico">â</div><div class="kpi-val" id="c-ok" style="color:var(--green)">0</div><div class="kpi-lbl">Recebidos</div></div>
-    <div class="kpi"><div class="kpi-ico">ð</div><div class="kpi-val" id="c-avg" style="color:var(--blue)">â</div><div class="kpi-lbl">Dias Médios (RH)</div></div>
     <div class="kpi"><div class="kpi-ico">⏳</div><div class="kpi-val" id="c-pend" style="color:var(--orange)">0</div><div class="kpi-lbl">Pedidos Pendentes</div></div>
     <div class="kpi"><div class="kpi-ico">🔴</div><div class="kpi-val" id="c-late" style="color:var(--red)">0</div><div class="kpi-lbl">Em Atraso</div></div>
     <div class="kpi"><div class="kpi-ico">✅</div><div class="kpi-val" id="c-ok" style="color:var(--green)">0</div><div class="kpi-lbl">Recebidos</div></div>
@@ -1023,7 +1006,7 @@ function renderAlertas(){
     emCurso.innerHTML=running.map(function(it){
       var restTxt=it.rest<0?'<b style="color:var(--red)">vencido</b>':it.rest===0?'<b>hoje</b>':it.rest+'d';
       var dt=it.fim?it.fim.slice(5).replace('-','/'):'';
-      return '<div style="margin-bottom:9px"><div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:3px"><span style="font-size:11px;font-weight:800">'+it.tipo+' <span style="font-family:DM Mono,monospace;color:var(--blue);font-size:10px">'+it.ref+'</span></span><span style="font-size:10px;font-weight:700;color:var(--gray)">'+dt+' Â· '+restTxt+'</span></div><div style="height:4px;background:#e8ecf4;border-radius:4px;overflow:hidden"><div style="width:'+it.pct+'%;height:100%;background:'+it.cor+';border-radius:4px"></div></div></div>';
+      return '<div style="margin-bottom:9px"><div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:3px"><span style="font-size:11px;font-weight:800">'+it.tipo+' <span style="font-family:DM Mono,monospace;color:var(--blue);font-size:10px">'+it.ref+'</span></span><span style="font-size:10px;font-weight:700;color:var(--gray)">'+dt+' · '+restTxt+'</span></div><div style="height:4px;background:#e8ecf4;border-radius:4px;overflow:hidden"><div style="width:'+it.pct+'%;height:100%;background:'+it.cor+';border-radius:4px"></div></div></div>';
       return '<div style="margin-bottom:9px"><div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:3px"><span style="font-size:11px;font-weight:800">'+it.tipo+' <span style="font-family:DM Mono,monospace;color:var(--blue);font-size:10px">'+it.ref+'</span></span><span style="font-size:10px;font-weight:700;color:var(--gray)">'+dt+' · '+restTxt+'</span></div><div style="height:4px;background:#e8ecf4;border-radius:4px;overflow:hidden"><div style="width:'+it.pct+'%;height:100%;background:'+it.cor+';border-radius:4px"></div></div></div>';
     }).join('');
   }
@@ -1076,7 +1059,7 @@ function renderProcList(containerId,procs){
         <span class="pi-ref">${p.ref}</span>
         ${estadoBadge}
         <span class="pi-name">${p.pi} â ${p.proj.substring(0,30)}${p.proj.length>30?'â¦':''}</span>
-        <span class="pi-cat ${catClass(p.cat)}">${catLabel(p.cat)} Â· ${p.sub}</span>
+        <span class="pi-cat ${catClass(p.cat)}">${catLabel(p.cat)} · ${p.sub}</span>
         <span class="pi-name">${p.pi} — ${p.proj.substring(0,30)}${p.proj.length>30?'…':''}</span>
         <span class="pi-cat ${catClass(p.cat)}">${catLabel(p.cat)} · ${p.sub}</span>
       </div>
@@ -1100,7 +1083,7 @@ function openDet(idx,faseNum){
   const p=processos[idx];
   const fi=FASE_INFO[faseNum-1];
   document.getElementById('det-title').textContent=`${p.ref} â ${p.pi}`;
-  document.getElementById('det-sub').textContent=`${catLabel(p.cat)} Â· ${p.sub} Â· ${p.proj}`;
+  document.getElementById('det-sub').textContent=`${catLabel(p.cat)} · ${p.sub} · ${p.proj}`;
   document.getElementById('det-title').textContent=`${p.ref} — ${p.pi}`;
   document.getElementById('det-sub').textContent=`${catLabel(p.cat)} · ${p.sub} · ${p.proj}`;
   document.getElementById('det-hdr').style.background=fi.col;
@@ -1855,8 +1838,6 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 <footer style="background:#fff;border-top:1px solid #e8ecf4;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;font-size:10px;color:#868e96;font-weight:600">
-  <span>NOVA Medical School Â· Serviço Jurídico Â· Dashboard de Gestão de Recrutamento em Investigação</span>
-  <span>Desenvolvido por <strong style="color:#3b5bdb">Elaine Cifoni</strong> Â· 2026</span>
   <span>NOVA Medical School · Serviço Jurídico · Dashboard de Gestão de Recrutamento em Investigação</span>
   <span>Desenvolvido por <strong style="color:#3b5bdb">Elaine Cifoni</strong> · 2026</span>
 </footer>
