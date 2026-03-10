@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NOVA Medical — Gestão de Recrutamento</thitle>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajaxh/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
 :root{
@@ -1407,68 +1407,35 @@ async function saveMetas(){
 
 // ── Carregamento de dados ──────────────────────────────────────
 // ── Carregamento de dados ──────────────────────────────────────
-async function reloadData(){
-  try {
-    const [procsData, contsData, cfgData] = await Promise.all([
-      API.processos.list(),
-      API.contratos.list(),
-      API.configuracoes.get(),
-    ]);
-    processos = procsData || [];
-    contratos = contsData || [];
-    if(cfgData?.metas)       metas          = {...METAS_DEFAULT, ...cfgData.metas};
-    if(cfgData?.feriados)    feriadosCustom = cfgData.feriados;
-  } catch(e){
-    console.error('Erro ao carregar dados:', e);
-    toast('Erro ao carregar dados da base de dados.','#c92a2a');
-  }
+async function reloadData() {
+  loadFromStorage();
+  if (typeof renderDash === 'function') renderDash();
+  if (typeof renderAjustes === 'function') renderAjustes();
 }
 
 // ── Inicialização ──────────────────────────────────────────────
 // ── Inicialização ──────────────────────────────────────────────
 async function initApp(){
-  // Mostrar ecrã de carregamento
-  // Mostrar ecrã de carregamento
-  document.body.innerHTML = '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;font-family:Nunito,sans-serif;color:#1a2340"><div style="font-size:28px;font-weight:900;margin-bottom:12px">🏥 NOVA Medical School</div><div style="font-size:14px;color:#868e96;font-weight:600">A iniciar autenticação Microsoft…</div></div>';
-
-  // Aguardar que auth.js e api.js estejam carregados (scripts com defer)
-  await new Promise(resolve => {
-    if(typeof initAuth === 'function' && typeof API !== 'undefined') resolve();
-    else document.addEventListener('DOMContentLoaded', resolve);
-  });
-
-  const authed = await initAuth();
-  if(!authed) return; // redirect em curso
-
-  // Restaurar o body original (foi apagado pelo ecrã de carregamento)
-  location.reload(); // reload simples após auth — msal guarda sessão
-  // Restaurar o body original (foi apagado pelo ecrã de carregamento)
-  location.reload(); // reload simples após auth — msal guarda sessão
+  if (typeof initAuth === 'function') return await initAuth();
+  if (typeof Auth !== 'undefined') {
+    await Auth.initDefaultAdmin();
+    return Auth.requireAuth();
+  }
+  return false;
 }
 
 // ── Arranque ───────────────────────────────────────────────────
 // ── Arranque ───────────────────────────────────────────────────
 (async function main(){
-  // Se já autenticado (conta na sessão), carregar dados e renderizar
-  // Se já autenticado (conta na sessão), carregar dados e renderizar
-  const user = typeof getCurrentUser === 'function' ? getCurrentUser() : null;
-  if(!user) {
-    // auth.js ainda não carregou (defer) — aguardar DOMContentLoaded
-    // auth.js ainda não carregou (defer) — aguardar DOMContentLoaded
-    document.addEventListener('DOMContentLoaded', async () => {
-      const u2 = typeof getCurrentUser === 'function' ? getCurrentUser() : null;
-      if(!u2){ await initApp(); return; }
-      await reloadData();
-      renderAjustes();
-      renderDash();
-    });
-  } else {
-    document.addEventListener('DOMContentLoaded', async () => {
-      await reloadData();
-      renderAjustes();
-      renderDash();
-    });
+  if (document.readyState === 'loading') {
+    await new Promise(r => document.addEventListener('DOMContentLoaded', r));
   }
+  const authed = await initApp();
+  if (!authed) return;
+  loadFromStorage();
+  if (typeof autoToday === 'function') autoToday();
+  if (typeof renderAjustes === 'function') renderAjustes();
+  if (typeof renderDash === 'function') renderDash();
 })();
 
 
@@ -1553,12 +1520,6 @@ criarProcesso = function() {
   if (processos.length !== before) persistProcessos();
 };
 
-// ═══ Override reloadData para funcionar sem API ═══
-async function reloadData() {
-  loadFromStorage();
-  if (typeof renderDash === 'function') renderDash();
-  if (typeof renderAjustes === 'function') renderAjustes();
-}
 
 // ═══ Override guardarContrato para persistir ═══
 const __origGuardarContrato = typeof guardarContrato !== 'undefined' ? guardarContrato : null;
